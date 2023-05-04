@@ -12,6 +12,6 @@ func Post(to string, subject string, body string) error {
 		"to": to,
 		"subject": subject,
 	}
-	_, err := service.Post(NotifyURL, params, nil, nil, strings.NewReader(body))
+	_, err := service.Post(ServiceURL, params, nil, nil, strings.NewReader(body))
 	return err
 }
