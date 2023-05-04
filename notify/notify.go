@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-var NotifyURL string
+var ServiceURL string
 
 func Post(to string, subject string, body string) error {
 	params := service.NVP{
