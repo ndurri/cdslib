@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 )
 
-func Load(file string, resp *interface{}) error {
+func Load(file string, resp interface{}) error {
 	content, err := os.ReadFile(file)
 	if err != nil {
 		return err
