@@ -16,17 +16,17 @@ type Config struct {
 	QueueURLPrefix string
 }
 
-var config Config
+var cfg Config
 
 func Init(content config.Content) error {
-	if err := config.Unmarshal(content, &config); err != nil {
+	if err := config.Unmarshal(content, &cfg); err != nil {
 		return err
 	}
 	return sqs.Init()
 }
 
 func NewQueue(name string) Queue {
-	return Queue{Name: name, URL: config.QueueURLPrefix + name}
+	return Queue{Name: name, URL: cfg.QueueURLPrefix + name}
 }
 
 func (q *Queue) Post(body string, attributes MessageAttributes) error {

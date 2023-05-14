@@ -9,10 +9,10 @@ type Config struct {
 	EmailSendQueueName string
 }
 
-var config Config
+var cfg Config
 
 func Init(content config.Content) error {
-	if err := config.Unmarshal(content, &config); err != nil {
+	if err := config.Unmarshal(content, &cfg); err != nil {
 		return err
 	}
 	return queue.Init(content)
@@ -23,5 +23,5 @@ func Post(to string, subject string, body string) error {
 		"to":      to,
 		"subject": subject,
 	}
-	return queue.Post(config.EmailSendQueueName, body, params)
+	return queue.Post(cfg.EmailSendQueueName, body, params)
 }

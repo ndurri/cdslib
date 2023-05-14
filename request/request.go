@@ -11,16 +11,17 @@ type Config struct {
 	RequestQueueName string
 }
 
-var config Config
+var cfg Config
 
 func Init(content config.Content) error {
-	if err := config.Unmarshal(content, &config); err != nil {
+	if err := config.Unmarshal(content, &cfg); err != nil {
 		return err
 	}
 	return queue.Init(content)
 }
 
-func Post(eori string, body string, params MessageAttributes) error {
+func Post(doctype string, eori string, body string, params MessageAttributes) error {
 	params["eori"] = eori
-	return queue.Post(config.RequestQueueName, body, params)
+	params["doctype"] = doctype
+	return queue.Post(cfg.RequestQueueName, body, params)
 }
