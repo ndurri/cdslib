@@ -1,12 +1,14 @@
-package notify
+package request
 
 import (
 	"github.com/ndurri/cdslib/config"
 	"github.com/ndurri/cdslib/queue"
 )
 
+type MessageAttributes queue.MessageAttributes
+
 type Config struct {
-	EmailSendQueueName string
+	RequestQueueName string
 }
 
 var config Config
@@ -18,10 +20,7 @@ func Init(content config.Content) error {
 	return queue.Init(content)
 }
 
-func Post(to string, subject string, body string) error {
-	params := MessageAttributes{
-		"to":      to,
-		"subject": subject,
-	}
-	return queue.Post(config.EmailSendQueueName, body, params)
+func Post(eori string, body string, params MessageAttributes) error {
+	params["eori"] = eori
+	return queue.Post(config.RequestQueueName, body, params)
 }
