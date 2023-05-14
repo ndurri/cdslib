@@ -35,5 +35,5 @@ func (q *Queue) Post(body string, attributes MessageAttributes) error {
 
 func (q *Queue) Get() (*Message, error) {
 	message, err := sqs.Get(q.URL)
-	return *Message(message), err
+	return message.(*Message), err
 }
