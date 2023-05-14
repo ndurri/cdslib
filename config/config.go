@@ -1,14 +1,20 @@
 package config
 
 import (
-	"os"
 	"encoding/json"
+	"os"
 )
 
-func Load(file string, resp interface{}) error {
-	content, err := os.ReadFile(file)
+type Content []byte
+
+func Load() (Content, error) {
+	content, err := os.ReadFile("cdsconf.json")
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return json.Unmarshal(content, resp)
+	return content, nil
+}
+
+func Unmarshal(content Content, dest interface{}) error {
+	return json.Unmarshal(content, dest)
 }
