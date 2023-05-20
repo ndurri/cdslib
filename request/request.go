@@ -1,27 +1,32 @@
 package request
 
 import (
-	"github.com/ndurri/cdslib/config"
-	"github.com/ndurri/cdslib/queue"
+	"process/cdslib/config"
+	"process/cdslib/queue"
 )
 
 type MessageAttributes queue.MessageAttributes
 
 type Config struct {
-	RequestQueueName string
+	RequestQueue string
 }
 
-var cfg Config
+var requestQueue *queue.Queue
 
 func Init(content config.Content) error {
+	var cfg Config
 	if err := config.Unmarshal(content, &cfg); err != nil {
 		return err
 	}
-	return queue.Init(content)
+	if err := queue.Init(content); err != nil {
+		return err
+	}
+	requestQueue = queue.NewQueue(cfg.RequestQueue)
+	return nil
 }
 
 func Post(doctype string, eori string, body string, params MessageAttributes) error {
 	params["eori"] = eori
 	params["doctype"] = doctype
-	return queue.Post(cfg.RequestQueueName, body, params)
+	return requestQueue.Post(body, queue.MessageAttributes(params))
 }

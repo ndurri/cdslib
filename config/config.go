@@ -7,8 +7,8 @@ import (
 
 type Content []byte
 
-func Load() (Content, error) {
-	content, err := os.ReadFile("cdsconf.json")
+func Load(filename string) (Content, error) {
+	content, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
