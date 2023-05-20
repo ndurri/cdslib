@@ -1,7 +1,7 @@
 package queue
 
 import (
-	"process/cdslib/config"
+	"github.com/ndurri/cdslib/config"
 
 	"github.com/ndurri/aws/sqs"
 )

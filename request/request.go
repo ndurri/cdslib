@@ -1,8 +1,8 @@
 package request
 
 import (
-	"process/cdslib/config"
-	"process/cdslib/queue"
+	"github.com/ndurri/cdslib/config"
+	"github.com/ndurri/cdslib/queue"
 )
 
 type MessageAttributes queue.MessageAttributes
