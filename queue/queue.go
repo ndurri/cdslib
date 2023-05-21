@@ -23,8 +23,15 @@ func (q *Queue) Post(body string, attributes MessageAttributes) error {
 }
 
 func (q *Queue) Get() (*Message, error) {
-	message, err := sqs.Get(q.URL)
-	return (*Message)(message), err
+	for {
+		message, err := sqs.Get(q.URL)
+		if err != nil {
+			return nil, err
+		}
+		if message != nil {
+			return (*Message)(message), nil
+		}
+	}
 }
 
 func (m *Message) Delete() error {
