@@ -9,11 +9,11 @@ type MessageAttributes queue.MessageAttributes
 
 var requestQueue *queue.Queue
 
-func Post(doctype string, eori string, body string, params MessageAttributes) error {
+func Post(doctype string, submitter string, body string, params MessageAttributes) error {
 	if requestQueue == nil {
 		requestQueue = queue.NewQueue(config.Get("RequestQueue"))
 	}
-	params["eori"] = eori
+	params["submitter"] = submitter
 	params["doctype"] = doctype
 	return requestQueue.Post(body, queue.MessageAttributes(params))
 }
