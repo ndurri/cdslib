@@ -2,19 +2,30 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
+	"log"
 	"os"
 )
 
-type Content []byte
+type Content map[string]string
 
-func Load(filename string) (Content, error) {
-	content, err := os.ReadFile(filename)
+var content Content = Content{}
+
+var NotFound error = errors.New("Config item not found.")
+
+func Load(filename string) error {
+	bytes, err := os.ReadFile(filename)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return content, nil
+	return json.Unmarshal(bytes, &content)
 }
 
-func Unmarshal(content Content, dest interface{}) error {
-	return json.Unmarshal(content, dest)
+func Get(key string) string {
+	value, prs := content[key]
+	if !prs {
+		log.Printf("FATAL: Request for %s.\n", key)
+		log.Fatal(NotFound)
+	}
+	return value
 }

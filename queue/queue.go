@@ -14,21 +14,8 @@ type Queue struct {
 	URL  string
 }
 
-type Config struct {
-	QueueURLPrefix string
-}
-
-var cfg Config
-
-func Init(content config.Content) error {
-	if err := config.Unmarshal(content, &cfg); err != nil {
-		return err
-	}
-	return sqs.Init()
-}
-
 func NewQueue(name string) *Queue {
-	return &Queue{Name: name, URL: cfg.QueueURLPrefix + name}
+	return &Queue{Name: name, URL: config.Get("QueueURLPrefix") + name}
 }
 
 func (q *Queue) Post(body string, attributes MessageAttributes) error {
