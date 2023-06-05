@@ -18,7 +18,7 @@ func NewQueue(name string) *Queue {
 	return &Queue{Name: name, URL: config.Get("QueueURLPrefix") + name}
 }
 
-func (q *Queue) Post(body string, attributes MessageAttributes) error {
+func (q *Queue) Post(body string, attributes MessageAttributes) (*string, error) {
 	return sqs.Put(q.URL, body, sqs.MessageAttributes(attributes))
 }
 

@@ -8,7 +8,7 @@ import (
 
 var notifyQueue *queue.Queue
 
-func Post(to string, subject string, body string) error {
+func Post(to string, subject string, body string) (*string, error) {
 	if notifyQueue == nil {
 		notifyQueue = queue.NewQueue(config.Get("MailSendQueue"))
 	}
