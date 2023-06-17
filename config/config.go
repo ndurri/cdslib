@@ -2,30 +2,38 @@ package config
 
 import (
 	"encoding/json"
-	"errors"
-	"log"
-	"os"
+	"io"
 )
 
-type Content map[string]string
+type ConfigItem string
+type Config map[string]*ConfigItem
 
-var content Content = Content{}
+var config Config = Config{}
 
-var NotFound error = errors.New("Config item not found.")
-
-func Load(filename string) error {
-	bytes, err := os.ReadFile(filename)
+func Load(ins io.Reader) error {
+	bytes, err := io.ReadAll(ins)
 	if err != nil {
 		return err
 	}
-	return json.Unmarshal(bytes, &content)
+	var loaded map[string]string
+	err = json.Unmarshal(bytes, &loaded)
+	if err != nil {
+		return err
+	}
+	for key, value := range loaded {
+		item := Get(key)
+		*item = ConfigItem(value)
+	}
+	return nil
 }
 
-func Get(key string) string {
-	value, prs := content[key]
+func Get(key string) *ConfigItem {
+	item, prs := config[key]
 	if !prs {
-		log.Printf("FATAL: Request for %s.\n", key)
-		log.Fatal(NotFound)
+		var newitem ConfigItem = ""
+		config[key] = &newitem
+		item = &newitem
 	}
-	return value
+	return item
 }
+
