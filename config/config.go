@@ -5,8 +5,7 @@ import (
 	"io"
 )
 
-type ConfigItem string
-type Config map[string]*ConfigItem
+type Config map[string]*string
 
 var config Config = Config{}
 
@@ -22,15 +21,15 @@ func Load(ins io.Reader) error {
 	}
 	for key, value := range loaded {
 		item := Get(key)
-		*item = ConfigItem(value)
+		*item = value
 	}
 	return nil
 }
 
-func Get(key string) *ConfigItem {
+func Get(key string) *string {
 	item, prs := config[key]
 	if !prs {
-		var newitem ConfigItem = ""
+		var newitem string = ""
 		config[key] = &newitem
 		item = &newitem
 	}
