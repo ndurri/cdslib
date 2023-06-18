@@ -7,13 +7,24 @@ import (
 
 type MessageAttributes queue.MessageAttributes
 
-var requestQueue *queue.Queue
+type Message struct {
+	Id string
+	Submitter string
+	DocType string
+	Body string
+}
 
-func Post(doctype string, submitter string, body string, params MessageAttributes) (*string, error) {
-	if requestQueue == nil {
-		requestQueue = queue.NewQueue(config.Get("RequestQueue"))
+var requestQueue = queue.NewQueue(config.Get("RequestQueue"))
+
+func (m *Message) Post() error {
+	params := queue.MessageAttributes{
+		"submitter": m.Submitter,
+		"doctype": m.DocType,
 	}
-	params["submitter"] = submitter
-	params["doctype"] = doctype
-	return requestQueue.Post(body, queue.MessageAttributes(params))
+	id, err := requestQueue.Post(m.Body, queue.MessageAttributes(params))
+	if err != nil {
+		return err
+	}
+	m.Id = *id
+	return nil
 }

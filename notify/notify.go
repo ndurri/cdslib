@@ -6,15 +6,18 @@ import (
 	"github.com/ndurri/cdslib/queue"
 )
 
-var notifyQueue *queue.Queue
+type Message struct {
+	To string
+	Subject string
+	Body string
+}
 
-func Post(to string, subject string, body string) (*string, error) {
-	if notifyQueue == nil {
-		notifyQueue = queue.NewQueue(config.Get("MailSendQueue"))
-	}
+var notifyQueue = queue.NewQueue(config.Get("MailSendQueue"))
+
+func (m *Message) Post() (*string, error) {
 	params := queue.MessageAttributes{
-		"to":      to,
-		"subject": subject,
+		"to":      m.To,
+		"subject": m.Subject,
 	}
-	return notifyQueue.Post(body, params)
+	return notifyQueue.Post(m.Body, params)
 }
